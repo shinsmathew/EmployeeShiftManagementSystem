@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EmployeeShiftManagementSystem.Application.DTOs.Employee;
+using EmployeeShiftManagementSystem.Core.Exceptions;
 using EmployeeShiftManagementSystem.Core.Interfaces;
 using FluentValidation;
 using MediatR;
@@ -39,7 +40,7 @@ namespace EmployeeShiftManagementSystem.Application.Features.Employee.Commands
             bool isEmailExist = await _employeeRepository.IsEmailUniqueAsync(request.EmployeeCreateDto.Email);
             if (!isEmailExist)
             {
-                throw new ApplicationException($"Email '{request.EmployeeCreateDto.Email}' is already in use.");
+                throw new BadRequestException($"Email '{request.EmployeeCreateDto.Email}' is already in use.");
             }
 
             var employee = _mapper.Map<Core.Entities.Employee>(request.EmployeeCreateDto);

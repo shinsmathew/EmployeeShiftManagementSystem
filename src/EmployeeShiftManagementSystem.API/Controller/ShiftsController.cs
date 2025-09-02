@@ -83,12 +83,17 @@ namespace EmployeeShiftManagementSystem.API.Controller
                 EndDate = endDate
             });
 
+
+
+
+
+
             if (employee == null)
-                return NotFound("No shifts found in the specified date range");
+                return NotFound("No shifts found in the specified date range"); 
 
             return Ok(new { Employee = employee, TotalHours = totalHours });
         }
 
-       
+
     }
 }

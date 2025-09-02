@@ -31,7 +31,7 @@ namespace EmployeeShiftManagementSystem.Application.Features.Employee.Commands
             var employee = await _employeeRepository.GetByIdAsync(request.Id);
             if (employee == null)
             {
-                throw new KeyNotFoundException($"Employee with {request.Id} is Not Found.");
+                throw new NotFoundException($"Employee with {request.Id} is Not Found.");
             }
 
             employee.IsActive = false;

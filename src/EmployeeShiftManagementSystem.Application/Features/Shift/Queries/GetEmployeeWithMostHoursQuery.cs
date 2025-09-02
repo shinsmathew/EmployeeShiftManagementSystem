@@ -35,8 +35,7 @@ namespace EmployeeShiftManagementSystem.Application.Features.Shift.Queries
             var validationResult = await _validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {
-                var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
-                throw new BadRequestException($"Validation failed: {string.Join(", ", errors)}");
+                throw new ValidationException(validationResult.Errors);
             }
 
             var employee = await _shiftRepository.GetEmployeeWithMostHoursAsync(request.StartDate, request.EndDate);

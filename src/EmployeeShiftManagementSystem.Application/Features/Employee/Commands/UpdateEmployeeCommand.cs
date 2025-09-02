@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EmployeeShiftManagementSystem.Application.DTOs.Employee;
 using EmployeeShiftManagementSystem.Application.Features.Employee.Validators;
+using EmployeeShiftManagementSystem.Core.Exceptions;
 using EmployeeShiftManagementSystem.Core.Interfaces;
 using FluentValidation;
 using MediatR;
@@ -42,7 +43,7 @@ namespace EmployeeShiftManagementSystem.Application.Features.Employee.Commands
 
             if (employee == null)
             {
-                throw new KeyNotFoundException($"Employee with Id {request.Id} not found.");
+                throw new NotFoundException($"Employee with Id {request.Id} not found.");
             }
 
             var UpdatedEmployee = _mapper.Map(request.EmployeeUpdateDto, employee);

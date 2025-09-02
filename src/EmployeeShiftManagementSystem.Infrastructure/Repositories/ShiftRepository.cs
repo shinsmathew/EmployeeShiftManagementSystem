@@ -54,12 +54,14 @@ namespace EmployeeShiftManagementSystem.Infrastructure.Repositories
             return await query.AnyAsync();
         }
 
-       
+
         public async Task<IEnumerable<Shift>> GetShiftsByDateRangeAsync(DateTime startDate, DateTime endDate, int pageNumber, int pageSize)
         {
             return await _context.Shifts
                 .Include(s => s.Employee)
-                .Where(s => !s.IsDeleted && s.StartTime >= startDate && s.EndTime <= endDate)
+                .Where(s => !s.IsDeleted &&
+                           s.StartTime < endDate &&   
+                           s.EndTime > startDate)     
                 .OrderBy(s => s.StartTime)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -69,15 +71,19 @@ namespace EmployeeShiftManagementSystem.Infrastructure.Repositories
         public async Task<int> GetShiftsByDateRangeCountAsync(DateTime startDate, DateTime endDate)
         {
             return await _context.Shifts
-                .Where(s => !s.IsDeleted && s.StartTime >= startDate && s.EndTime <= endDate)
+                .Where(s => !s.IsDeleted &&
+                           s.StartTime < endDate &&
+                           s.EndTime > startDate)
                 .CountAsync();
         }
 
         public async Task<double> GetTotalHoursWorkedAsync(int employeeId, DateTime startDate, DateTime endDate)
         {
             var shifts = await _context.Shifts
-                .Where(s => s.EmployeeId == employeeId && !s.IsDeleted &&
-                           s.StartTime >= startDate && s.EndTime <= endDate)
+                .Where(s => s.EmployeeId == employeeId &&
+                           !s.IsDeleted &&
+                           s.StartTime < endDate &&
+                           s.EndTime > startDate)
                 .ToListAsync();
 
             return shifts.Sum(s => (s.EndTime - s.StartTime).TotalHours);
@@ -85,20 +91,30 @@ namespace EmployeeShiftManagementSystem.Infrastructure.Repositories
 
         public async Task<Employee> GetEmployeeWithMostHoursAsync(DateTime startDate, DateTime endDate)
         {
-            var employeeHours = await _context.Shifts
-                .Where(s => !s.IsDeleted && s.StartTime >= startDate && s.EndTime <= endDate)
-                .GroupBy(s => s.Employee)
+            
+            var query = _context.Shifts
+                .Where(s => !s.IsDeleted &&
+                           s.StartTime < endDate && 
+                           s.EndTime > startDate)   
+                .GroupBy(s => s.EmployeeId) 
                 .Select(g => new
                 {
-                    Employee = g.Key,
-                    TotalHours = g.Sum(s => (s.EndTime - s.StartTime).TotalHours)
+                    EmployeeId = g.Key,
+                    TotalHours = g.Sum(s => EF.Functions.DateDiffSecond(s.StartTime, s.EndTime) / 3600.0) // More precise calculation
                 })
-                .OrderByDescending(x => x.TotalHours)
-                .FirstOrDefaultAsync();
+                .OrderByDescending(x => x.TotalHours);
 
-            return employeeHours?.Employee;
+           
+            var topEmployeeStats = await query.FirstOrDefaultAsync();
+
+            if (topEmployeeStats == null)
+                return null;
+
+         
+            return await _context.Employees
+                .FirstOrDefaultAsync(e => e.Id == topEmployeeStats.EmployeeId);
         }
 
-        
+
     }
 }
