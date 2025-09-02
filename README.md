@@ -1,2 +1,2 @@
-<img width="1920" height="1080" alt="Employee Shift Management System" src="https://github.com/user-attachments/assets/16b18c68-51d0-4ca0-a5b9-9a3097ec336f" />
+<img width="1755" height="952" alt="Employee Shift Management System" src="https://github.com/user-attachments/assets/ff8ef85f-1af6-45b4-b16c-6179a01d28f8" />
 
