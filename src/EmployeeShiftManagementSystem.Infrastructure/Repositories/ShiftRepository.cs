@@ -2,11 +2,7 @@
 using EmployeeShiftManagementSystem.Core.Interfaces;
 using EmployeeShiftManagementSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace EmployeeShiftManagementSystem.Infrastructure.Repositories
 {
@@ -19,27 +15,14 @@ namespace EmployeeShiftManagementSystem.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<Shift> GetByIdAsync(int id) // Changed from GetIdAsync
+        public async Task<Shift> GetByIdAsync(int id) 
         {
-            return await _context.Shifts
+            return await _context.Shifts.AsNoTracking()
                 .Include(s => s.Employee)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public async Task<IEnumerable<Shift>> GetAllAsync()
-        {
-            return await _context.Shifts
-                .Include(s => s.Employee)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Shift>> FindAsync(System.Linq.Expressions.Expression<Func<Shift, bool>> predicate)
-        {
-            return await _context.Shifts
-                .Include(s => s.Employee)
-                .Where(predicate)
-                .ToListAsync();
-        }
+        
 
         public async Task AddAsync(Shift entity)
         {
@@ -47,22 +30,13 @@ namespace EmployeeShiftManagementSystem.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Shift entity) // Made async and proper signature
+        public async Task UpdateAsync(Shift entity) 
         {
             _context.Shifts.Update(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task RemoveAsync(Shift entity) // Made async and proper signature
-        {
-            _context.Shifts.Remove(entity);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _context.Shifts.AnyAsync(s => s.Id == id);
-        }
+        
 
         public async Task<bool> HasOverlappingShiftAsync(int employeeId, DateTime startTime, DateTime endTime, int? excludeShiftId = null)
         {
@@ -80,25 +54,7 @@ namespace EmployeeShiftManagementSystem.Infrastructure.Repositories
             return await query.AnyAsync();
         }
 
-        public async Task<IEnumerable<Shift>> GetShiftsByEmployeeIdAsync(int employeeId, DateTime? startDate, DateTime? endDate)
-        {
-            var query = _context.Shifts
-                .Include(s => s.Employee)
-                .Where(s => s.EmployeeId == employeeId && !s.IsDeleted);
-
-            if (startDate.HasValue)
-            {
-                query = query.Where(s => s.StartTime >= startDate.Value);
-            }
-
-            if (endDate.HasValue)
-            {
-                query = query.Where(s => s.EndTime <= endDate.Value);
-            }
-
-            return await query.ToListAsync();
-        }
-
+       
         public async Task<IEnumerable<Shift>> GetShiftsByDateRangeAsync(DateTime startDate, DateTime endDate, int pageNumber, int pageSize)
         {
             return await _context.Shifts
@@ -143,17 +99,6 @@ namespace EmployeeShiftManagementSystem.Infrastructure.Repositories
             return employeeHours?.Employee;
         }
 
-        public async Task<double> GetAverageHoursWorkedAsync(DateTime startDate, DateTime endDate)
-        {
-            var shifts = await _context.Shifts
-                .Where(s => !s.IsDeleted && s.StartTime >= startDate && s.EndTime <= endDate)
-                .ToListAsync();
-
-            if (!shifts.Any())
-                return 0;
-
-            var totalHours = shifts.Sum(s => (s.EndTime - s.StartTime).TotalHours);
-            return totalHours / shifts.Count;
-        }
+        
     }
 }

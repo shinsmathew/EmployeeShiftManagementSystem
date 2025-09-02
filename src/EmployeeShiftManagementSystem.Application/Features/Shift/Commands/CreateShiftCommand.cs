@@ -4,11 +4,7 @@ using EmployeeShiftManagementSystem.Core.Exceptions;
 using EmployeeShiftManagementSystem.Core.Interfaces;
 using FluentValidation;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace EmployeeShiftManagementSystem.Application.Features.Shift.Commands
 {
@@ -34,21 +30,21 @@ namespace EmployeeShiftManagementSystem.Application.Features.Shift.Commands
 
         public async Task<ShiftResponseDto> Handle(CreateShiftCommand request, CancellationToken cancellationToken)
         {
-            // Validate the incoming DTO
+          
             var validationResult = await _validator.ValidateAsync(request.ShiftCreateDto, cancellationToken);
             if (!validationResult.IsValid)
             {
                 throw new ValidationException(validationResult.Errors);
             }
 
-            // Check if the employee exists
+            
             var employee = await _employeeRepository.GetByIdAsync(request.ShiftCreateDto.EmployeeId);
             if (employee == null)
             {
                 throw new KeyNotFoundException($"Employee with ID {request.ShiftCreateDto.EmployeeId} not found.");
             }
 
-            // Check if the employee Active
+            
             if (!employee.IsActive)
             {
                 throw new BadRequestException("Cannot assign shift to an inactive employee.");

@@ -2,11 +2,7 @@
 using EmployeeShiftManagementSystem.Core.Interfaces;
 using FluentValidation;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace EmployeeShiftManagementSystem.Application.Features.Shift.Queries
 {

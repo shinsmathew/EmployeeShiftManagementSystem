@@ -2,7 +2,6 @@
 using EmployeeShiftManagementSystem.Application.Features.Employee.Commands;
 using EmployeeShiftManagementSystem.Application.Features.Employee.Queries;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeShiftManagementSystem.API.Controller

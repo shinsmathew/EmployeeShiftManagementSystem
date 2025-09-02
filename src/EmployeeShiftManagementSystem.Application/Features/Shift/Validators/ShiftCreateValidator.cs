@@ -2,11 +2,7 @@
 using EmployeeShiftManagementSystem.Application.Features.Shift.Commands;
 using EmployeeShiftManagementSystem.Application.Features.Shift.Queries;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace EmployeeShiftManagementSystem.Application.Features.Shift.Validators
 {

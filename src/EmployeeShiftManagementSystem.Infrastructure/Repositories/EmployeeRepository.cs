@@ -2,11 +2,7 @@
 using EmployeeShiftManagementSystem.Core.Interfaces;
 using EmployeeShiftManagementSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace EmployeeShiftManagementSystem.Infrastructure.Repositories
 {
@@ -20,26 +16,11 @@ namespace EmployeeShiftManagementSystem.Infrastructure.Repositories
         }
 
 
-        public async Task<Employee> GetByIdAsync(int id) // Changed from GetIdAsync
+        public async Task<Employee> GetByIdAsync(int id) 
         {
-            return await _context.Employees
+            return await _context.Employees.AsNoTracking()
                 .Include(e => e.Shifts)
                 .FirstOrDefaultAsync(e => e.Id == id);
-        }
-
-        public async Task<IEnumerable<Employee>> GetAllAsync()
-        {
-            return await _context.Employees
-                .Include(e => e.Shifts)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Employee>> FindAsync(System.Linq.Expressions.Expression<Func<Employee, bool>> predicate)
-        {
-            return await _context.Employees
-                .Include(e => e.Shifts)
-                .Where(predicate)
-                .ToListAsync();
         }
 
         public async Task AddAsync(Employee entity)
@@ -51,19 +32,9 @@ namespace EmployeeShiftManagementSystem.Infrastructure.Repositories
         public async Task UpdateAsync(Employee entity)
         {
             _context.Employees.Update(entity);
-            await _context.SaveChangesAsync(); // Add await
+            await _context.SaveChangesAsync(); 
         }
 
-        public async Task RemoveAsync(Employee entity)
-        {
-            _context.Employees.Remove(entity);
-            await _context.SaveChangesAsync(); // Add await
-        }
-
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _context.Employees.AnyAsync(e => e.Id == id);
-        }
 
         public async Task<IEnumerable<Employee>> GetActiveEmployeesAsync(int pageNumber, int pageSize)
         {

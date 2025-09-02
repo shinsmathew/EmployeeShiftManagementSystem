@@ -3,11 +3,7 @@ using EmployeeShiftManagementSystem.Application.DTOs.Shift;
 using EmployeeShiftManagementSystem.Core.Exceptions;
 using EmployeeShiftManagementSystem.Core.Interfaces;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace EmployeeShiftManagementSystem.Application.Features.Shift.Commands
 {
