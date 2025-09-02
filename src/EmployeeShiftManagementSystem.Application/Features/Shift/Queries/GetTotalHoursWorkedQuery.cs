@@ -44,7 +44,7 @@ namespace EmployeeShiftManagementSystem.Application.Features.Shift.Queries
             }
 
             // Check if employee exists
-            var employee = await _employeeRepository.GetIdAsync(request.EmployeeId);
+            var employee = await _employeeRepository.GetByIdAsync(request.EmployeeId);
             if (employee == null)
             {
                 throw new NotFoundException($"Employee with ID {request.EmployeeId} not found.");

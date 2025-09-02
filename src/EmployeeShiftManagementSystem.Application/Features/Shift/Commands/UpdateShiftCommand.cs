@@ -39,21 +39,20 @@ namespace EmployeeShiftManagementSystem.Application.Features.Shift.Commands
 
         public async Task<ShiftResponseDto> Handle(UpdateShiftCommand request, CancellationToken cancellationToken)
         {
-            var validationResult = await _validator.ValidateAsync(request.ShiftUpdateDto, cancellationToken);
-            if (!validationResult.IsValid)
+            var ValidatorResult = await _validator.ValidateAsync(request.ShiftUpdateDto, cancellationToken);
+            if (!ValidatorResult.IsValid)
             {
-                var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
-                throw new BadRequestException($"Validation failed: {string.Join(", ", errors)}");
+                throw new ValidationException(ValidatorResult.Errors);
             }
 
-            var shift = await _shiftRepository.GetIdAsync(request.Id);
+            var shift = await _shiftRepository.GetByIdAsync(request.Id);
             if (shift == null || shift.IsDeleted)
             { 
 
                throw new NotFoundException($"Shift with ID {request.Id} not found.");
             }
 
-            var employee = await _employeeRepository.GetIdAsync(request.ShiftUpdateDto.EmployeeId);
+            var employee = await _employeeRepository.GetByIdAsync(request.ShiftUpdateDto.EmployeeId);
             if (employee == null)
             {
                 throw new NotFoundException($"Employee with ID {request.ShiftUpdateDto.EmployeeId} not found.");

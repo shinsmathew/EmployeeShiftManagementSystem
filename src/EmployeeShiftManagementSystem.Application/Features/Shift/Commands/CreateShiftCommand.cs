@@ -42,7 +42,7 @@ namespace EmployeeShiftManagementSystem.Application.Features.Shift.Commands
             }
 
             // Check if the employee exists
-            var employee = await _employeeRepository.GetIdAsync(request.ShiftCreateDto.EmployeeId);
+            var employee = await _employeeRepository.GetByIdAsync(request.ShiftCreateDto.EmployeeId);
             if (employee == null)
             {
                 throw new KeyNotFoundException($"Employee with ID {request.ShiftCreateDto.EmployeeId} not found.");

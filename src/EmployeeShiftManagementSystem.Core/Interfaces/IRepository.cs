@@ -9,12 +9,12 @@ namespace EmployeeShiftManagementSystem.Core.Interfaces
 {
     public interface IRepository<T> where T : BaseEntity
     {
-        Task<T> GetIdAsync(int id);
+        Task<T> GetByIdAsync(int id); // Changed from GetIdAsync
         Task<IEnumerable<T>> GetAllAsync();
-        Task<IEnumerable<T>> FindAsync(Func<T, bool> predicate);
+        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate); // Added proper type
         Task AddAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task RemoveAsync(T entity);
+        Task UpdateAsync(T entity); // Made async
+        Task RemoveAsync(T entity); // Made async
         Task<bool> ExistsAsync(int id);
     }
 }

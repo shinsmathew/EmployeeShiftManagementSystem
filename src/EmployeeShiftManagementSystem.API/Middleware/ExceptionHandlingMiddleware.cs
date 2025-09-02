@@ -1,4 +1,5 @@
 ﻿using EmployeeShiftManagementSystem.Core.Exceptions;
+using FluentValidation;
 using System.Net;
 using System.Text.Json;
 
@@ -34,6 +35,11 @@ namespace EmployeeShiftManagementSystem.API.Middleware
 
             switch (exception)
             {
+                case ValidationException validationException:
+                    code = HttpStatusCode.BadRequest;
+                    var errors = validationException.Errors.Select(e => new { e.PropertyName, e.ErrorMessage });
+                    result = JsonSerializer.Serialize(new { errors });
+                    break;
                 case NotFoundException notFoundException:
                     code = HttpStatusCode.NotFound;
                     result = JsonSerializer.Serialize(new { error = notFoundException.Message });

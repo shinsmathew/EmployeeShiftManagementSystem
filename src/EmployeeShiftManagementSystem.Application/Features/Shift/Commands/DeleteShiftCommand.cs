@@ -29,7 +29,7 @@ namespace EmployeeShiftManagementSystem.Application.Features.Shift.Commands
 
         public async Task<ShiftResponseDto> Handle(DeleteShiftCommand request, CancellationToken cancellationToken)
         {
-            var shift = await _shiftRepository.GetIdAsync(request.Id);
+            var shift = await _shiftRepository.GetByIdAsync(request.Id);
             if (shift == null || shift.IsDeleted)
             {
                 throw new NotFoundException($"Shift with ID {request.Id} not found.");

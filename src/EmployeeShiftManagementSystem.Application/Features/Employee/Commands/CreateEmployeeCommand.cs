@@ -33,8 +33,7 @@ namespace EmployeeShiftManagementSystem.Application.Features.Employee.Commands
 
             if (!ValidatorResult.IsValid)
             {
-                var errors = ValidatorResult.Errors.Select(e => e.ErrorMessage).ToList();
-                throw new ApplicationException($"Validation failed: {string.Join(", ", errors)}");
+                throw new ValidationException(ValidatorResult.Errors);
             }
 
             bool isEmailExist = await _employeeRepository.IsEmailUniqueAsync(request.EmployeeCreateDto.Email);

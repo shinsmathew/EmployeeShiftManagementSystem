@@ -28,7 +28,7 @@ namespace EmployeeShiftManagementSystem.Application.Features.Employee.Commands
 
         public async Task<EmployeeResponseDto> Handle(DeactivateEmployeeCommand request, CancellationToken cancellationToken)
         {
-            var employee = await _employeeRepository.GetIdAsync(request.Id);
+            var employee = await _employeeRepository.GetByIdAsync(request.Id);
             if (employee == null)
             {
                 throw new KeyNotFoundException($"Employee with {request.Id} is Not Found.");

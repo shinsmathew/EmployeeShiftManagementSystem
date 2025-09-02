@@ -35,11 +35,10 @@ namespace EmployeeShiftManagementSystem.Application.Features.Employee.Commands
             var ValidatorResult = await _validator.ValidateAsync(request.EmployeeUpdateDto, cancellationToken);
             if (!ValidatorResult.IsValid)
             {
-                var errors = ValidatorResult.Errors.Select(e => e.ErrorMessage).ToList();
-                throw new ApplicationException($"Validation failed: {string.Join(", ", errors)}");
+                throw new ValidationException(ValidatorResult.Errors);
             }
 
-            var employee = await _employeeRepository.GetIdAsync(request.Id);
+            var employee = await _employeeRepository.GetByIdAsync(request.Id);
 
             if (employee == null)
             {

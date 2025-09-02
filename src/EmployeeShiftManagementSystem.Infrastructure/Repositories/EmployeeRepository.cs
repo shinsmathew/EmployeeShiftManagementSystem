@@ -20,7 +20,7 @@ namespace EmployeeShiftManagementSystem.Infrastructure.Repositories
         }
 
 
-        public async Task<Employee> GetByIdAsync(int id)
+        public async Task<Employee> GetByIdAsync(int id) // Changed from GetIdAsync
         {
             return await _context.Employees
                 .Include(e => e.Shifts)
@@ -48,16 +48,16 @@ namespace EmployeeShiftManagementSystem.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public void Update(Employee entity)
+        public async Task UpdateAsync(Employee entity)
         {
             _context.Employees.Update(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(); // Add await
         }
 
-        public void Remove(Employee entity)
+        public async Task RemoveAsync(Employee entity)
         {
             _context.Employees.Remove(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(); // Add await
         }
 
         public async Task<bool> ExistsAsync(int id)
