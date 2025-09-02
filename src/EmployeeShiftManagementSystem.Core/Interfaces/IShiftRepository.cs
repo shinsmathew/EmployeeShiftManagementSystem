@@ -10,5 +10,6 @@ namespace EmployeeShiftManagementSystem.Core.Interfaces
         Task<int> GetShiftsByDateRangeCountAsync(DateTime startDate, DateTime endDate);
         Task<double> GetTotalHoursWorkedAsync(int employeeId, DateTime startDate, DateTime endDate);
         Task<Employee> GetEmployeeWithMostHoursAsync(DateTime startDate, DateTime endDate);
+        Task<double> GetAverageHoursWorkedAsync(DateTime startDate, DateTime endDate);
     }
 }

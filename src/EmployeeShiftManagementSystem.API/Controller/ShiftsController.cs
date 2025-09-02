@@ -94,6 +94,17 @@ namespace EmployeeShiftManagementSystem.API.Controller
             return Ok(new { Employee = employee, TotalHours = totalHours });
         }
 
+        [HttpGet("average-hours")]
+        public async Task<ActionResult<double>> GetAverageHoursWorked([FromQuery] DateTime startDate,[FromQuery] DateTime endDate)
+        {
+            var averageHours = await _mediator.Send(new GetAverageHoursWorkedQuery
+            {
+                StartDate = startDate,
+                EndDate = endDate
+            });
+            return Ok(averageHours);
+        }
+
 
     }
 }

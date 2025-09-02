@@ -115,6 +115,24 @@ namespace EmployeeShiftManagementSystem.Infrastructure.Repositories
                 .FirstOrDefaultAsync(e => e.Id == topEmployeeStats.EmployeeId);
         }
 
+        public async Task<double> GetAverageHoursWorkedAsync(DateTime startDate, DateTime endDate)
+        {
+            var result = await _context.Shifts
+                .Where(s => !s.IsDeleted &&
+                           s.StartTime < endDate &&
+                           s.EndTime > startDate)
+                .GroupBy(s => 1) // Group all records together
+                .Select(g => new
+                {
+                    TotalHours = g.Sum(s => (double)(EF.Functions.DateDiffSecond(
+                        s.StartTime > startDate ? s.StartTime : startDate,
+                        s.EndTime < endDate ? s.EndTime : endDate
+                    )) / 3600.0),
+                    EmployeeCount = g.Select(s => s.EmployeeId).Distinct().Count()
+                })
+                .FirstOrDefaultAsync();
 
+            return result?.EmployeeCount > 0 ? result.TotalHours / result.EmployeeCount : 0;
+        }
     }
 }
